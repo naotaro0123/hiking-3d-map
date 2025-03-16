@@ -6,7 +6,7 @@ import { addAwsShadeStyle } from "../map-styles/aws-shade-style";
 import { addHillShadeStyle } from "../map-styles/hill-shade-style";
 import { setMapSkyStyle } from "../map-styles/map-sky-style";
 
-export const MapLibreTerrain = () => {
+export const MainMapLibre = () => {
   const protocol = new pmtiles.Protocol();
   maplibregl.addProtocol("pmtiles", protocol.tile);
 

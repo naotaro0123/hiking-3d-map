@@ -1,10 +1,10 @@
 import "./App.css";
-import { MapLibreTerrain } from "./Components/MapLibreTerrain";
+import { MainMapLibre } from "./Components/MainMapLibre";
 
 function App() {
   return (
     <>
-      <MapLibreTerrain />
+      <MainMapLibre />
     </>
   );
 }
