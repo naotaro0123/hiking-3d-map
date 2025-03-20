@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { addAwsShadeStyle } from "../map-styles/aws-shade-style";
 import { addHillShadeStyle } from "../map-styles/hill-shade-style";
 import { setMapSkyStyle } from "../map-styles/map-sky-style";
+import { initViewSetting, setUiStyle } from "../map-styles/ui-style";
 
 export const MainMapLibre = () => {
   const protocol = new pmtiles.Protocol();
@@ -18,9 +19,7 @@ export const MainMapLibre = () => {
 
     const map = new maplibregl.Map({
       container,
-      center: [138.4339, 35.2139], // 富士山
-      maxPitch: 80,
-      zoom: 10,
+      ...initViewSetting,
       style: {
         version: 8,
         glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
@@ -58,7 +57,13 @@ export const MainMapLibre = () => {
       setMapSkyStyle(map);
       addAwsShadeStyle(map);
       addHillShadeStyle(map);
+      setUiStyle(map);
     });
+
+    // cleanup for StrictMode
+    return () => {
+      map.remove();
+    };
   }, []);
 
   return (
