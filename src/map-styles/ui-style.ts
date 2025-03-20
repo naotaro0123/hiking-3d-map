@@ -1,4 +1,5 @@
-import "./ui-style.css";
+import { mdiHome, mdiVideo2d, mdiVideo3d } from "@mdi/js";
+import maplibregl from "maplibre-gl";
 
 type InitViewSetting = {
   center: [number, number];
@@ -16,46 +17,66 @@ export const initViewSetting: InitViewSetting = {
   zoom: 10,
 };
 
-const createControl = () => {
-  const controls = document.createElement("div");
-  controls.className = "mapboxgl-ctrl";
-  return controls;
-};
-
-const createButton = (text: string, onClick: () => void) => {
-  const button = document.createElement("button");
-  button.className = "mapboxgl-ctrl-button";
-  button.textContent = text;
-  button.onclick = onClick;
-  return button;
-};
-
 export const setUiStyle = (map: maplibregl.Map) => {
-  const controls = createControl();
-  map._container.appendChild(controls);
+  // 視点リセットボタンを追加
+  const resetViewButton = new ResetViewButton();
+  map.addControl(resetViewButton, "top-right");
 
-  const zoomResetButton = createButton("視点リセット", () => {
-    map.easeTo({ ...initViewSetting });
-  });
-  controls.appendChild(zoomResetButton);
+  // 2D視点ボタン/3D視点ボタンを追加
+  const changeViewButton = new ChangeViewButton();
+  map.addControl(changeViewButton, "top-right");
 
-  const zoomInButton = createButton("視点拡大", () => {
-    map.zoomIn();
-  });
-  controls.appendChild(zoomInButton);
-
-  const zoomOutButton = createButton("視点縮小", () => {
-    map.zoomOut();
-  });
-  controls.appendChild(zoomOutButton);
-
-  const parallelViewButton = createButton("2D視点（平行投影）", () => {
-    map.easeTo({ pitch: 0 });
-  });
-  controls.appendChild(parallelViewButton);
-
-  const perspectiveViewButton = createButton("3D視点（透視投影）", () => {
-    map.easeTo({ pitch: 60 });
-  });
-  controls.appendChild(perspectiveViewButton);
+  // コントロール関係表示
+  map.addControl(new maplibregl.NavigationControl());
+  // ユーザーの現在地を取得するコントロールを追加
+  // ref: https://zenn.dev/yama_kawa/articles/245eca6cc20879
+  map.addControl(
+    new maplibregl.GeolocateControl({
+      positionOptions: {
+        // より精度の高い位置情報を取得する
+        enableHighAccuracy: true,
+      },
+      // ユーザーが移動するたびに位置を自動的に更新
+      trackUserLocation: true,
+    })
+  );
 };
+
+const getSvgIcon = (title: string, path: string) =>
+  `<button><svg viewBox="0 0 24 24"><title>${title}</title><path d="${path}"></path></svg></button>`;
+
+// ref: https://stackoverflow.com/questions/40162662/mapbox-gl-how-to-create-custom-control
+class ResetViewButton implements maplibregl.IControl {
+  onAdd(map: maplibregl.Map) {
+    const div = document.createElement("div");
+    div.className = "maplibregl-ctrl maplibregl-ctrl-group";
+    div.innerHTML = getSvgIcon("視点リセット", mdiHome);
+    div.addEventListener("contextmenu", (e) => e.preventDefault());
+    div.addEventListener("click", () => map.flyTo({ ...initViewSetting }));
+
+    return div;
+  }
+  onRemove(): void {}
+}
+
+class ChangeViewButton implements maplibregl.IControl {
+  onAdd(map: maplibregl.Map) {
+    const container = document.createElement("div");
+    container.className = "maplibregl-ctrl maplibregl-ctrl-group";
+
+    const parallelView = document.createElement("div");
+    parallelView.innerHTML = getSvgIcon("2D視点（平行投影）", mdiVideo2d);
+    parallelView.addEventListener("contextmenu", (e) => e.preventDefault());
+    parallelView.addEventListener("click", () => map.easeTo({ pitch: 0 }));
+    container.appendChild(parallelView);
+
+    const perspectiveView = document.createElement("div");
+    perspectiveView.innerHTML = getSvgIcon("3D視点（透視投影）", mdiVideo3d);
+    perspectiveView.addEventListener("contextmenu", (e) => e.preventDefault());
+    perspectiveView.addEventListener("click", () => map.easeTo({ pitch: 60 }));
+    container.appendChild(perspectiveView);
+
+    return container;
+  }
+  onRemove(): void {}
+}
