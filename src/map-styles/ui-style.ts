@@ -19,12 +19,10 @@ export const initViewSetting: InitViewSetting = {
 
 export const setUiStyle = (map: maplibregl.Map) => {
   // 視点リセットボタンを追加
-  const resetViewButton = new ResetViewButton();
-  map.addControl(resetViewButton, "top-right");
+  map.addControl(new ResetViewControl(), "top-right");
 
   // 2D視点ボタン/3D視点ボタンを追加
-  const changeViewButton = new ChangeViewButton();
-  map.addControl(changeViewButton, "top-right");
+  map.addControl(new ChangeViewControl(), "top-right");
 
   // コントロール関係表示
   map.addControl(new maplibregl.NavigationControl());
@@ -46,7 +44,7 @@ const getSvgIcon = (title: string, path: string) =>
   `<button><svg viewBox="0 0 24 24"><title>${title}</title><path d="${path}"></path></svg></button>`;
 
 // ref: https://stackoverflow.com/questions/40162662/mapbox-gl-how-to-create-custom-control
-class ResetViewButton implements maplibregl.IControl {
+class ResetViewControl implements maplibregl.IControl {
   onAdd(map: maplibregl.Map) {
     const div = document.createElement("div");
     div.className = "maplibregl-ctrl maplibregl-ctrl-group";
@@ -59,7 +57,7 @@ class ResetViewButton implements maplibregl.IControl {
   onRemove(): void {}
 }
 
-class ChangeViewButton implements maplibregl.IControl {
+class ChangeViewControl implements maplibregl.IControl {
   onAdd(map: maplibregl.Map) {
     const container = document.createElement("div");
     container.className = "maplibregl-ctrl maplibregl-ctrl-group";
