@@ -17,4 +17,7 @@ $ yarn build
 # Lint Fix
 $ yarn lint
 
+# deploy github page
+$ yarn deploy
+
 ```

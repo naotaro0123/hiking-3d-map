@@ -7,10 +7,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npm run build && gh-pages -d dist -m \"Updates --skip-ci\""
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
+    "gh-pages": "^6.3.0",
     "maplibre-contour": "^0.1.0",
     "maplibre-gl": "^5.2.0",
     "pmtiles": "^4.3.0",
