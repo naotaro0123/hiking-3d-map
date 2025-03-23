@@ -2,10 +2,11 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import * as pmtiles from "pmtiles";
 import { useEffect, useRef } from "react";
+import { initViewSetting } from "../Controls/controls-common";
 import { addAwsShadeStyle } from "../map-styles/aws-shade-style";
 import { addHillShadeStyle } from "../map-styles/hill-shade-style";
 import { setMapSkyStyle } from "../map-styles/map-sky-style";
-import { initViewSetting, setUiStyle } from "../map-styles/ui-style";
+import { setUiStyle } from "../map-styles/ui-style";
 
 export const MainMapLibre = () => {
   const protocol = new pmtiles.Protocol();
