@@ -11,6 +11,7 @@
     "deploy": "npm run build && gh-pages -d dist -m \"Updates --skip-ci\""
   },
   "dependencies": {
+    "@maplibre/maplibre-gl-geocoder": "^1.8.0",
     "@mdi/js": "^7.4.47",
     "gh-pages": "^6.3.0",
     "maplibre-contour": "^0.1.0",
