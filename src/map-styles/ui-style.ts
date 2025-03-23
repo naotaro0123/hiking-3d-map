@@ -2,6 +2,7 @@ import MaplibreGeocoder, {
   CarmenGeojsonFeature,
   MaplibreGeocoderApi,
   MaplibreGeocoderApiConfig,
+  MaplibreGeocoderFeatureResults,
 } from "@maplibre/maplibre-gl-geocoder";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import maplibregl from "maplibre-gl";
@@ -17,30 +18,27 @@ const geocoderApi: MaplibreGeocoderApi = {
     try {
       const request = `https://nominatim.openstreetmap.org/search?q=${config.query}&format=geojson&polygon_geojson=1&addressdetails=1`;
       const response = await fetch(request);
-      const geojson = await response.json();
+      const geojson = (await response.json()) as MaplibreGeocoderFeatureResults;
       for (const feature of geojson.features) {
-        const center = [
-          feature.bbox[0] + (feature.bbox[2] - feature.bbox[0]) / 2,
-          feature.bbox[1] + (feature.bbox[3] - feature.bbox[1]) / 2,
-        ];
+        const center =
+          feature.bbox !== undefined
+            ? [
+                feature.bbox[0] + (feature.bbox[2] - feature.bbox[0]) / 2,
+                feature.bbox[1] + (feature.bbox[3] - feature.bbox[1]) / 2,
+              ]
+            : [];
         const point: CarmenGeojsonFeature = {
           type: "Feature",
           geometry: {
             type: "Point",
             coordinates: center,
           },
-          place_name: feature.properties.display_name,
+          place_name: feature.properties?.display_name ?? "",
           properties: feature.properties,
-          id: feature.properties.place_id, // FIXME:?
-          text: feature.properties.display_name,
+          id: feature.properties?.place_id ?? "",
+          text: feature.properties?.display_name ?? "",
           place_type: ["place"],
-          bbox: [
-            // FIXME:?
-            Math.min(feature.bbox[0], feature.bbox[2]),
-            Math.min(feature.bbox[1], feature.bbox[3]),
-            Math.max(feature.bbox[0], feature.bbox[2]),
-            Math.max(feature.bbox[1], feature.bbox[3]),
-          ],
+          bbox: feature.bbox,
         };
         features.push(point);
       }
@@ -57,7 +55,7 @@ const geocoderApi: MaplibreGeocoderApi = {
 
 export const setUiStyle = (map: maplibregl.Map) => {
   // 目的地入力のジオコーダーを追加
-  map.addControl(new MaplibreGeocoder(geocoderApi, { maplibregl }));
+  map.addControl(new MaplibreGeocoder(geocoderApi, { maplibregl }), "top-left");
 
   // 視点リセットボタンを追加
   map.addControl(new ResetViewControl(), "top-right");
