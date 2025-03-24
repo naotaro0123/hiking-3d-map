@@ -1,6 +1,6 @@
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import maplibregl from "maplibre-gl";
-import { ChangeViewControl } from "../Controls/ChangeViewControl";
+import { ChangeViewControl } from "../Controls/changeViewControl";
 import { getMapLibreGeocoder } from "../Controls/maplibreGeocoder";
 import { ResetViewControl } from "../Controls/resetViewControl";
 
