@@ -12,6 +12,15 @@ export class ChangeViewControl implements maplibregl.IControl {
     parallelView.addEventListener("contextmenu", (e) => e.preventDefault());
     parallelView.addEventListener("click", () => map.easeTo({ pitch: 0 }));
     container.appendChild(parallelView);
+    parallelView.classList.add("disabled");
+
+    map.on("pitchend", () => {
+      if (map.getPitch() === 0) {
+        parallelView.classList.add("disabled");
+      } else {
+        parallelView.classList.remove("disabled");
+      }
+    });
 
     const perspectiveView = document.createElement("div");
     perspectiveView.innerHTML = getSvgIcon("3D視点（透視投影）", mdiVideo3d);
