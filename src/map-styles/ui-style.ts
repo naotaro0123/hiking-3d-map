@@ -28,13 +28,15 @@ export const setUiStyle = (map: maplibregl.Map) => {
 
   geolocateControl.on("geolocate", (e) => {
     const coords = e.coords as GeolocationCoordinates;
+    // TODO: 緯度・軽度・高度から目的地までの距離を計算する（stateを使う）
     new maplibregl.Popup()
       .setLngLat([coords.longitude, coords.latitude])
       .setHTML(
         `<div style="text-align: center;">
-           <h3>現在地</h3>
-           <p>緯度: ${coords.latitude}</p>
-           <p>経度: ${coords.longitude}</p>
+           <h4>現在地</h4>
+           <div>緯度: ${coords.latitude}</div>
+           <div>経度: ${coords.longitude}</div>
+           <div>高度: ${coords.altitude}</div>
          </div>`
       )
       .addTo(map);
