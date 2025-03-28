@@ -18,14 +18,25 @@ export const setUiStyle = (map: maplibregl.Map) => {
   map.addControl(new maplibregl.NavigationControl());
   // ユーザーの現在地を取得するコントロールを追加
   // ref: https://zenn.dev/yama_kawa/articles/245eca6cc20879
-  map.addControl(
-    new maplibregl.GeolocateControl({
-      positionOptions: {
-        // より精度の高い位置情報を取得する
-        enableHighAccuracy: true,
-      },
-      // ユーザーが移動するたびに位置を自動的に更新
-      trackUserLocation: true,
-    })
-  );
+  const geolocateControl = new maplibregl.GeolocateControl({
+    positionOptions: {
+      // より精度の高い位置情報を取得する
+      enableHighAccuracy: true,
+    },
+  });
+  map.addControl(geolocateControl);
+
+  geolocateControl.on("geolocate", (e) => {
+    const coords = e.coords as GeolocationCoordinates;
+    new maplibregl.Popup()
+      .setLngLat([coords.longitude, coords.latitude])
+      .setHTML(
+        `<div style="text-align: center;">
+           <h3>現在地</h3>
+           <p>緯度: ${coords.latitude}</p>
+           <p>経度: ${coords.longitude}</p>
+         </div>`
+      )
+      .addTo(map);
+  });
 };
