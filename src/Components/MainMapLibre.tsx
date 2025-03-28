@@ -52,6 +52,7 @@ export const MainMapLibre = () => {
           },
         ],
       },
+      attributionControl: false, // 地図の著作権表示を非表示にする
     });
 
     map.on("load", () => {
