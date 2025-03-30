@@ -7,7 +7,7 @@ import { addMyPositionStyle } from "./my-position-style";
 
 export const setUiStyle = (map: maplibregl.Map) => {
   // 目的地入力のジオコーダーを追加
-  map.addControl(getMapLibreGeocoder(), "top-left");
+  map.addControl(getMapLibreGeocoder(map), "top-left");
 
   // 視点リセットボタンを追加
   map.addControl(new ResetViewControl(), "top-right");

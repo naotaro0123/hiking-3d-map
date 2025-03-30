@@ -49,6 +49,26 @@ const geocoderApi: MaplibreGeocoderApi = {
   },
 };
 
-export const getMapLibreGeocoder = (): MaplibreGeocoder => {
-  return new MaplibreGeocoder(geocoderApi, { maplibregl });
+export const getMapLibreGeocoder = (map: maplibregl.Map): MaplibreGeocoder => {
+  const geocoder = new MaplibreGeocoder(geocoderApi, { maplibregl });
+
+  geocoder.on("result", (e) => {
+    console.log("result", e);
+    const result = e.result as CarmenGeojsonFeature;
+    if (result.geometry.type !== "Point") return;
+    const coords = result.geometry.coordinates as [number, number];
+
+    new maplibregl.Popup()
+      .setLngLat(coords)
+      .setHTML(
+        `<div>
+           <h4>${result.properties?.["name"] ?? ""}</h4>
+           <div>緯度: ${coords[1]}</div>
+           <div>経度: ${coords[0]}</div>
+         </div>`
+      )
+      .addTo(map);
+  });
+
+  return geocoder;
 };
