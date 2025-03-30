@@ -82,8 +82,14 @@ export const MainMapLibre = () => {
 
   return (
     <>
-      <div>
-        <div ref={mapRef} style={{ height: "100vh" }}></div>
+      <div ref={mapRef} style={{ height: "100vh" }}></div>
+      <div className="description">
+        <div className="title">使い方</div>
+        <ol>
+          <li>目的地を入力して選択する</li>
+          <li>現在地を取得する</li>
+          <li>目的地と現在地の距離が表示される</li>
+        </ol>
       </div>
     </>
   );
