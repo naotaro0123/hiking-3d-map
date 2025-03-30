@@ -62,7 +62,7 @@ export const getMapLibreGeocoder = (map: maplibregl.Map): MaplibreGeocoder => {
       .setLngLat(coords)
       .setHTML(
         `<div>
-           <h4>${result.properties?.["name"] ?? ""}</h4>
+           <div class="popup-title">${result.properties?.["name"] ?? ""}</div>
            <div>緯度: ${coords[1]}</div>
            <div>経度: ${coords[0]}</div>
          </div>`

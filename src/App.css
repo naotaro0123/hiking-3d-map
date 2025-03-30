@@ -1,3 +1,9 @@
 .disabled {
   opacity: 0.5;
 }
+
+.popup-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}

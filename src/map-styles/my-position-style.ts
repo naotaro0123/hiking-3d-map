@@ -35,9 +35,9 @@ export const addMyPositionStyle = (map: maplibregl.Map) => {
       .setLngLat([coords.lng, coords.lat])
       .setHTML(
         `<div>
-             <div>緯度: ${coords.lat}</div>
-             <div>経度: ${coords.lng}</div>
-           </div>`
+           <div>緯度: ${coords.lat}</div>
+           <div>経度: ${coords.lng}</div>
+         </div>`
       )
       .addTo(map);
 
