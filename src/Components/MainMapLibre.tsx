@@ -6,8 +6,10 @@ import { initViewSetting } from "../Controls/controls-common";
 import { addAwsShadeStyle } from "../map-styles/aws-shade-style";
 import { addHillShadeStyle } from "../map-styles/hill-shade-style";
 import { setMapSkyStyle } from "../map-styles/map-sky-style";
+import { addMyPositionStyle } from "../map-styles/my-position-style";
 import { setUiStyle } from "../map-styles/ui-style";
 
+const isDebug = true;
 const isVectorTile = true; // true: ベクタタイル, false: ラスタタイル
 const vectorTileStyle =
   "https://tile2.openstreetmap.jp/styles/osm-bright/style.json";
@@ -66,6 +68,10 @@ export const MainMapLibre = () => {
       addAwsShadeStyle(map);
       addHillShadeStyle(map);
       setUiStyle(map);
+      if (isDebug) {
+        // ダブルクリックした位置にマーカーを表示する（デバッグ用）
+        addMyPositionStyle(map);
+      }
     });
 
     // cleanup for StrictMode

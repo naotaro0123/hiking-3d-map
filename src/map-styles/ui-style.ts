@@ -1,10 +1,8 @@
-import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import maplibregl from "maplibre-gl";
 import { ChangeViewControl } from "../Controls/changeViewControl";
 import { getMapLibreGeocoder } from "../Controls/maplibreGeocoder";
 import { getMaplibreGeolocateControl } from "../Controls/maplibreGeolocateControl";
 import { ResetViewControl } from "../Controls/resetViewControl";
-import { addMyPositionStyle } from "./my-position-style";
 
 export const setUiStyle = (map: maplibregl.Map) => {
   // 目的地入力のジオコーダーを追加
@@ -21,7 +19,4 @@ export const setUiStyle = (map: maplibregl.Map) => {
 
   // ユーザーの現在地を取得するコントロールを追加
   map.addControl(getMaplibreGeolocateControl(map));
-
-  // ダブルクリックした位置にマーカーを表示する（デバッグ用）
-  addMyPositionStyle(map);
 };

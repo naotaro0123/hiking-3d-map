@@ -4,6 +4,7 @@ import MaplibreGeocoder, {
   MaplibreGeocoderApiConfig,
   MaplibreGeocoderFeatureResults,
 } from "@maplibre/maplibre-gl-geocoder";
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import maplibregl from "maplibre-gl";
 
 // ref1: https://maplibre.org/maplibre-gl-js/docs/examples/geocoder/
@@ -50,10 +51,13 @@ const geocoderApi: MaplibreGeocoderApi = {
 };
 
 export const getMapLibreGeocoder = (map: maplibregl.Map): MaplibreGeocoder => {
-  const geocoder = new MaplibreGeocoder(geocoderApi, { maplibregl });
+  const geocoder = new MaplibreGeocoder(geocoderApi, {
+    maplibregl,
+    placeholder: "目的地を入力",
+    flyTo: false, // 決定時に地図を移動させない
+  });
 
   geocoder.on("result", (e) => {
-    console.log("result", e);
     const result = e.result as CarmenGeojsonFeature;
     if (result.geometry.type !== "Point") return;
     const coords = result.geometry.coordinates as [number, number];
