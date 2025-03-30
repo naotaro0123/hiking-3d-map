@@ -3,6 +3,7 @@ import maplibregl from "maplibre-gl";
 import { ChangeViewControl } from "../Controls/changeViewControl";
 import { getMapLibreGeocoder } from "../Controls/maplibreGeocoder";
 import { ResetViewControl } from "../Controls/resetViewControl";
+import { addMyPositionStyle } from "./my-position-style";
 
 export const setUiStyle = (map: maplibregl.Map) => {
   // 目的地入力のジオコーダーを追加
@@ -32,7 +33,7 @@ export const setUiStyle = (map: maplibregl.Map) => {
     new maplibregl.Popup()
       .setLngLat([coords.longitude, coords.latitude])
       .setHTML(
-        `<div style="text-align: center;">
+        `<div>
            <h4>現在地</h4>
            <div>緯度: ${coords.latitude}</div>
            <div>経度: ${coords.longitude}</div>
@@ -41,4 +42,7 @@ export const setUiStyle = (map: maplibregl.Map) => {
       )
       .addTo(map);
   });
+
+  // ダブルクリックした位置にマーカーを表示する（デバッグ用）
+  addMyPositionStyle(map);
 };
