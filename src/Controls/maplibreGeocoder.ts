@@ -6,6 +6,7 @@ import MaplibreGeocoder, {
 } from "@maplibre/maplibre-gl-geocoder";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import maplibregl from "maplibre-gl";
+import { PositionState } from "../types/position-state";
 
 // ref1: https://maplibre.org/maplibre-gl-js/docs/examples/geocoder/
 // ref2: https://github.com/maplibre/maplibre-gl-geocoder
@@ -50,7 +51,10 @@ const geocoderApi: MaplibreGeocoderApi = {
   },
 };
 
-export const getMapLibreGeocoder = (map: maplibregl.Map): MaplibreGeocoder => {
+export const getMapLibreGeocoder = (
+  map: maplibregl.Map,
+  setPosition: React.Dispatch<React.SetStateAction<PositionState | undefined>>
+): MaplibreGeocoder => {
   const geocoder = new MaplibreGeocoder(geocoderApi, {
     maplibregl,
     placeholder: "目的地を入力",
@@ -61,6 +65,14 @@ export const getMapLibreGeocoder = (map: maplibregl.Map): MaplibreGeocoder => {
     const result = e.result as CarmenGeojsonFeature;
     if (result.geometry.type !== "Point") return;
     const coords = result.geometry.coordinates as [number, number];
+
+    setPosition((prev) => ({
+      ...prev,
+      destination: {
+        latitude: coords[1],
+        longitude: coords[0],
+      },
+    }));
 
     new maplibregl.Popup()
       .setLngLat(coords)

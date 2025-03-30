@@ -1,8 +1,12 @@
 import maplibregl from "maplibre-gl";
+import { PositionState } from "../types/position-state";
 
 const myPositionSourceName = "my-position";
 
-export const addMyPositionStyle = (map: maplibregl.Map) => {
+export const addMyPositionStyle = (
+  map: maplibregl.Map,
+  setPosition: React.Dispatch<React.SetStateAction<PositionState | undefined>>
+) => {
   const data = {
     type: "Feature" as const,
     geometry: {
@@ -31,12 +35,22 @@ export const addMyPositionStyle = (map: maplibregl.Map) => {
 
   map.on("dblclick", (e) => {
     const coords = e.lngLat;
+
+    setPosition((prev) => ({
+      ...prev,
+      myPosition: {
+        latitude: coords.lat,
+        longitude: coords.lng,
+      },
+    }));
+
     new maplibregl.Popup()
       .setLngLat([coords.lng, coords.lat])
       .setHTML(
         `<div>
-           <div>緯度: ${coords.lat}</div>
-           <div>経度: ${coords.lng}</div>
+            <div class="popup-title">現在地（デバッグ）</div>
+            <div>緯度: ${coords.lat}</div>
+            <div>経度: ${coords.lng}</div>
          </div>`
       )
       .addTo(map);

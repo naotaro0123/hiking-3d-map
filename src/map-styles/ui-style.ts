@@ -3,10 +3,14 @@ import { ChangeViewControl } from "../Controls/changeViewControl";
 import { getMapLibreGeocoder } from "../Controls/maplibreGeocoder";
 import { getMaplibreGeolocateControl } from "../Controls/maplibreGeolocateControl";
 import { ResetViewControl } from "../Controls/resetViewControl";
+import { PositionState } from "../types/position-state";
 
-export const setUiStyle = (map: maplibregl.Map) => {
+export const setUiStyle = (
+  map: maplibregl.Map,
+  setPosition: React.Dispatch<React.SetStateAction<PositionState | undefined>>
+) => {
   // 目的地入力のジオコーダーを追加
-  map.addControl(getMapLibreGeocoder(map), "top-left");
+  map.addControl(getMapLibreGeocoder(map, setPosition), "top-left");
 
   // 視点リセットボタンを追加
   map.addControl(new ResetViewControl(), "top-right");
@@ -18,5 +22,5 @@ export const setUiStyle = (map: maplibregl.Map) => {
   map.addControl(new maplibregl.NavigationControl());
 
   // ユーザーの現在地を取得するコントロールを追加
-  map.addControl(getMaplibreGeolocateControl(map));
+  map.addControl(getMaplibreGeolocateControl(map, setPosition));
 };

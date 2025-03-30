@@ -1,7 +1,9 @@
 import maplibregl from "maplibre-gl";
+import { PositionState } from "../types/position-state";
 
 export const getMaplibreGeolocateControl = (
-  map: maplibregl.Map
+  map: maplibregl.Map,
+  setPosition: React.Dispatch<React.SetStateAction<PositionState | undefined>>
 ): maplibregl.GeolocateControl => {
   // ref: https://zenn.dev/yama_kawa/articles/245eca6cc20879
   const geolocateControl = new maplibregl.GeolocateControl({
@@ -12,7 +14,16 @@ export const getMaplibreGeolocateControl = (
   });
   geolocateControl.on("geolocate", (e) => {
     const coords = e.coords as GeolocationCoordinates;
-    // TODO: 緯度・軽度・高度から目的地までの距離を計算する（stateを使う）
+
+    setPosition((prev) => ({
+      ...prev,
+      myPosition: {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        altitude: coords.altitude ?? undefined,
+      },
+    }));
+
     new maplibregl.Popup()
       .setLngLat([coords.longitude, coords.latitude])
       .setHTML(

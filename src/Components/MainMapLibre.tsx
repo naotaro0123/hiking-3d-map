@@ -1,13 +1,14 @@
 import maplibregl, { StyleSpecification } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import * as pmtiles from "pmtiles";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { initViewSetting } from "../Controls/controls-common";
 import { addAwsShadeStyle } from "../map-styles/aws-shade-style";
 import { addHillShadeStyle } from "../map-styles/hill-shade-style";
 import { setMapSkyStyle } from "../map-styles/map-sky-style";
 import { addMyPositionStyle } from "../map-styles/my-position-style";
 import { setUiStyle } from "../map-styles/ui-style";
+import { PositionState } from "../types/position-state";
 
 const isDebug = true;
 const isVectorTile = true; // true: ベクタタイル, false: ラスタタイル
@@ -51,6 +52,9 @@ export const MainMapLibre = () => {
   maplibregl.addProtocol("pmtiles", protocol.tile);
 
   const mapRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState<PositionState | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     const container = mapRef.current;
@@ -67,10 +71,10 @@ export const MainMapLibre = () => {
       setMapSkyStyle(map);
       addAwsShadeStyle(map);
       addHillShadeStyle(map);
-      setUiStyle(map);
+      setUiStyle(map, setPosition);
       if (isDebug) {
         // ダブルクリックした位置にマーカーを表示する（デバッグ用）
-        addMyPositionStyle(map);
+        addMyPositionStyle(map, setPosition);
       }
     });
 
@@ -91,6 +95,16 @@ export const MainMapLibre = () => {
           <li>目的地と現在地の距離が表示される</li>
         </ol>
       </div>
+      {isDebug && (
+        <div className="debug">
+          <div>
+            destination: {Object.values(position?.destination ?? {}).join(", ")}
+          </div>
+          <div>
+            myPosition: {Object.values(position?.myPosition ?? {}).join(", ")}
+          </div>
+        </div>
+      )}
     </>
   );
 };
