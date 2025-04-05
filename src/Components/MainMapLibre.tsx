@@ -90,21 +90,37 @@ export const MainMapLibre = () => {
       <div className="description">
         <div className="title">使い方</div>
         <ol>
-          <li>目的地を入力して選択する</li>
-          <li>現在地を取得する</li>
+          <li>
+            <span>目的地を入力して選択する</span>
+            {position?.destination === undefined ? (
+              <span></span>
+            ) : (
+              <span className="set-position">
+                <span>(緯度: {position.destination.latitude.toFixed(4)}</span>
+                <span>経度: {position.destination.longitude.toFixed(4)}</span>
+                <span>
+                  高度: {(position.destination.altitude ?? 0).toFixed(4)})
+                </span>
+              </span>
+            )}
+          </li>
+          <li>
+            <span>現在地を取得する</span>
+            {position?.myPosition === undefined ? (
+              <span></span>
+            ) : (
+              <span className="set-position">
+                <span>(緯度: {position.myPosition.latitude.toFixed(4)}</span>
+                <span>経度: {position.myPosition.longitude.toFixed(4)}</span>
+                <span>
+                  高度: {(position.myPosition.altitude ?? 0).toFixed(4)})
+                </span>
+              </span>
+            )}
+          </li>
           <li>目的地と現在地の距離が表示される</li>
         </ol>
       </div>
-      {isDebug && (
-        <div className="debug">
-          <div>
-            destination: {Object.values(position?.destination ?? {}).join(", ")}
-          </div>
-          <div>
-            myPosition: {Object.values(position?.myPosition ?? {}).join(", ")}
-          </div>
-        </div>
-      )}
     </>
   );
 };
