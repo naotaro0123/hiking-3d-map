@@ -73,14 +73,18 @@ export const getMapLibreGeocoder = (
         longitude: coords[0],
       },
     }));
+    const lat = coords[1];
+    const lng = coords[0];
+    const elevation = map.queryTerrainElevation([lng, lat]);
 
     new maplibregl.Popup()
       .setLngLat(coords)
       .setHTML(
         `<div>
            <div class="popup-title">${result.properties?.["name"] ?? ""}</div>
-           <div>緯度: ${coords[1]}</div>
-           <div>経度: ${coords[0]}</div>
+           <div>緯度: ${lat}</div>
+           <div>経度: ${lng}</div>
+            <div>高度: ${elevation}</div>
          </div>`
       )
       .addTo(map);

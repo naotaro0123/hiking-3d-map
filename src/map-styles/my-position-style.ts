@@ -33,7 +33,7 @@ export const addMyPositionStyle = (
     },
   });
 
-  map.on("dblclick", (e) => {
+  map.on("dblclick", async (e) => {
     const coords = e.lngLat;
 
     setPosition((prev) => ({
@@ -44,6 +44,8 @@ export const addMyPositionStyle = (
       },
     }));
 
+    const elevation = map.queryTerrainElevation([coords.lng, coords.lat]);
+
     new maplibregl.Popup()
       .setLngLat([coords.lng, coords.lat])
       .setHTML(
@@ -51,6 +53,7 @@ export const addMyPositionStyle = (
             <div class="popup-title">現在地（デバッグ）</div>
             <div>緯度: ${coords.lat}</div>
             <div>経度: ${coords.lng}</div>
+            <div>高度: ${elevation}</div>
          </div>`
       )
       .addTo(map);
