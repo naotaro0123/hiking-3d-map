@@ -34,25 +34,25 @@ export const addMyPositionStyle = (
   });
 
   map.on("dblclick", async (e) => {
-    const coords = e.lngLat;
+    const { lat: latitude, lng: longitude } = e.lngLat;
+    const elevation = map.queryTerrainElevation([longitude, latitude]);
 
     setPosition((prev) => ({
       ...prev,
       myPosition: {
-        latitude: coords.lat,
-        longitude: coords.lng,
+        latitude,
+        longitude,
+        altitude: elevation ?? undefined,
       },
     }));
 
-    const elevation = map.queryTerrainElevation([coords.lng, coords.lat]);
-
     new maplibregl.Popup()
-      .setLngLat([coords.lng, coords.lat])
+      .setLngLat([longitude, latitude])
       .setHTML(
         `<div>
             <div class="popup-title">現在地（デバッグ）</div>
-            <div>緯度: ${coords.lat}</div>
-            <div>経度: ${coords.lng}</div>
+            <div>緯度: ${latitude}</div>
+            <div>経度: ${longitude}</div>
             <div>高度: ${elevation}</div>
          </div>`
       )
@@ -61,7 +61,7 @@ export const addMyPositionStyle = (
     const source = map.getSource(
       myPositionSourceName
     ) as maplibregl.GeoJSONSource;
-    data.geometry.coordinates = [coords.lng, coords.lat];
+    data.geometry.coordinates = [longitude, latitude];
     source.setData(data);
   });
 };

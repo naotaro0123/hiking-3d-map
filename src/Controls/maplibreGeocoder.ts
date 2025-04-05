@@ -66,24 +66,26 @@ export const getMapLibreGeocoder = (
     if (result.geometry.type !== "Point") return;
     const coords = result.geometry.coordinates as [number, number];
 
+    const latitude = coords[1];
+    const longitude = coords[0];
+    const elevation = map.queryTerrainElevation([longitude, latitude]);
+
     setPosition((prev) => ({
       ...prev,
       destination: {
-        latitude: coords[1],
-        longitude: coords[0],
+        latitude,
+        longitude,
+        altitude: elevation ?? undefined,
       },
     }));
-    const lat = coords[1];
-    const lng = coords[0];
-    const elevation = map.queryTerrainElevation([lng, lat]);
 
     new maplibregl.Popup()
       .setLngLat(coords)
       .setHTML(
         `<div>
            <div class="popup-title">${result.properties?.["name"] ?? ""}</div>
-           <div>緯度: ${lat}</div>
-           <div>経度: ${lng}</div>
+           <div>緯度: ${latitude}</div>
+           <div>経度: ${longitude}</div>
             <div>高度: ${elevation}</div>
          </div>`
       )
