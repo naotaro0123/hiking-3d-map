@@ -84,14 +84,29 @@ export const MainMapLibre = () => {
     };
   }, []);
 
+  const disabledCalcDistance =
+    position?.destination === undefined || position?.myPosition === undefined;
+
   return (
     <>
       <div ref={mapRef} style={{ height: "100vh" }}></div>
+      <button
+        className="calc-distance"
+        disabled={disabledCalcDistance}
+        onClick={() => {}}
+        title={
+          disabledCalcDistance
+            ? "目的地と現在地を選択してください"
+            : "距離を計測できます"
+        }
+      >
+        計測
+      </button>
       <div className="description">
         <div className="title">使い方</div>
         <ol>
           <li>
-            <span>目的地を入力して選択する</span>
+            <span>目的地を入力して選択</span>
             {position?.destination === undefined ? (
               <span></span>
             ) : (
@@ -105,7 +120,7 @@ export const MainMapLibre = () => {
             )}
           </li>
           <li>
-            <span>現在地を取得する</span>
+            <span>現在地を取得</span>
             {position?.myPosition === undefined ? (
               <span></span>
             ) : (
@@ -118,7 +133,7 @@ export const MainMapLibre = () => {
               </span>
             )}
           </li>
-          <li>目的地と現在地の距離が表示される</li>
+          <li>計測ボタン押下で距離を表示</li>
         </ol>
       </div>
     </>
