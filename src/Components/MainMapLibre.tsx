@@ -1,3 +1,4 @@
+import { distance, point } from "@turf/turf";
 import maplibregl, { StyleSpecification } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import * as pmtiles from "pmtiles";
@@ -55,6 +56,8 @@ export const MainMapLibre = () => {
   const [position, setPosition] = useState<PositionState | undefined>(
     undefined
   );
+  // 距離計測結果
+  const [result, setResult] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const container = mapRef.current;
@@ -93,7 +96,23 @@ export const MainMapLibre = () => {
       <button
         className="calc-distance"
         disabled={disabledCalcDistance}
-        onClick={() => {}}
+        onClick={() => {
+          if (position?.destination === undefined) return;
+          if (position?.myPosition === undefined) return;
+
+          const result = distance(
+            point([
+              position.destination.longitude,
+              position.destination.latitude,
+            ]),
+            point([
+              position.myPosition.longitude,
+              position.myPosition.latitude,
+            ]),
+            { units: "kilometers" }
+          ).toFixed(2);
+          setResult(`距離: ${result}km`);
+        }}
         title={
           disabledCalcDistance
             ? "目的地と現在地を選択してください"
@@ -111,10 +130,10 @@ export const MainMapLibre = () => {
               <span></span>
             ) : (
               <span className="set-position">
-                <span>(緯度: {position.destination.latitude.toFixed(4)}</span>
+                <span>緯度: {position.destination.latitude.toFixed(4)}</span>
                 <span>経度: {position.destination.longitude.toFixed(4)}</span>
                 <span>
-                  高度: {(position.destination.altitude ?? 0).toFixed(4)})
+                  高度: {(position.destination.altitude ?? 0).toFixed(4)}
                 </span>
               </span>
             )}
@@ -125,15 +144,22 @@ export const MainMapLibre = () => {
               <span></span>
             ) : (
               <span className="set-position">
-                <span>(緯度: {position.myPosition.latitude.toFixed(4)}</span>
+                <span>緯度: {position.myPosition.latitude.toFixed(4)}</span>
                 <span>経度: {position.myPosition.longitude.toFixed(4)}</span>
                 <span>
-                  高度: {(position.myPosition.altitude ?? 0).toFixed(4)})
+                  高度: {(position.myPosition.altitude ?? 0).toFixed(4)}
                 </span>
               </span>
             )}
           </li>
-          <li>計測ボタン押下で距離を表示</li>
+          <li>
+            <span>計測ボタン押下で距離を表示</span>
+            {result === undefined ? (
+              <span></span>
+            ) : (
+              <span className="set-position">{result}</span>
+            )}
+          </li>
         </ol>
       </div>
     </>

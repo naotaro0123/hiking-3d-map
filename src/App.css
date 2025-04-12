@@ -60,4 +60,5 @@ ol {
 .set-position {
   display: flex;
   gap: 4px;
+  color: #00ff00;
 }
