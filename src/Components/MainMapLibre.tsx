@@ -1,5 +1,8 @@
 import { distance, point } from "@turf/turf";
-import maplibregl, { StyleSpecification } from "maplibre-gl";
+import maplibregl, {
+  GeoJSONSourceSpecification,
+  StyleSpecification,
+} from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import * as pmtiles from "pmtiles";
 import { useEffect, useRef, useState } from "react";
@@ -48,6 +51,20 @@ const rasterTileStyle: StyleSpecification = {
   ],
 };
 
+// 測定機能を保持するためのGeoJSONオブジェクト
+const geojson: GeoJSONSourceSpecification["data"] = {
+  type: "FeatureCollection",
+  features: [],
+};
+
+// 座標間の線を描画するために使用
+const linestring = {
+  type: "Feature",
+  geometry: {
+    type: "LineString",
+    coordinates: [] as number[],
+  },
+};
 export const MainMapLibre = () => {
   const protocol = new pmtiles.Protocol();
   maplibregl.addProtocol("pmtiles", protocol.tile);
@@ -79,6 +96,25 @@ export const MainMapLibre = () => {
         // ダブルクリックした位置にマーカーを表示する（デバッグ用）
         addMyPositionStyle(map, setPosition);
       }
+      map.addSource("geojson", {
+        type: "geojson",
+        data: geojson,
+      });
+      // 地図上で線を描画するためのレイヤー
+      map.addLayer({
+        id: "measure-lines",
+        type: "line",
+        source: "geojson",
+        layout: {
+          "line-cap": "round",
+          "line-join": "round",
+        },
+        paint: {
+          "line-color": "#000",
+          "line-width": 2.5,
+        },
+        filter: ["in", "$type", "LineString"],
+      });
     });
 
     // cleanup for StrictMode
@@ -99,6 +135,13 @@ export const MainMapLibre = () => {
         onClick={() => {
           if (position?.destination === undefined) return;
           if (position?.myPosition === undefined) return;
+
+          linestring.geometry.coordinates = [
+            position.destination.longitude,
+            position.destination.latitude,
+            position.myPosition.longitude,
+            position.myPosition.latitude,
+          ];
 
           const result = distance(
             point([
