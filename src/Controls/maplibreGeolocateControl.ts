@@ -12,6 +12,8 @@ export const getMaplibreGeolocateControl = (
       enableHighAccuracy: true,
     },
   });
+  let popup: maplibregl.Popup | null = null;
+
   geolocateControl.on("geolocate", (e) => {
     const coords = e.coords as GeolocationCoordinates;
 
@@ -24,7 +26,10 @@ export const getMaplibreGeolocateControl = (
       },
     }));
 
-    new maplibregl.Popup({ closeOnClick: false })
+    if (popup) {
+      popup.remove();
+    }
+    popup = new maplibregl.Popup({ closeOnClick: false })
       .setLngLat([coords.longitude, coords.latitude])
       .setHTML(
         `<div>

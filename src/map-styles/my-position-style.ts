@@ -32,6 +32,7 @@ export const addMyPositionStyle = (
       "circle-radius": 10,
     },
   });
+  let popup: maplibregl.Popup | null = null;
 
   map.on("dblclick", async (e) => {
     const { lat: latitude, lng: longitude } = e.lngLat;
@@ -46,7 +47,10 @@ export const addMyPositionStyle = (
       },
     }));
 
-    new maplibregl.Popup({ closeOnClick: false })
+    if (popup) {
+      popup.remove();
+    }
+    popup = new maplibregl.Popup({ closeOnClick: false })
       .setLngLat([longitude, latitude])
       .setHTML(
         `<div>

@@ -129,41 +129,59 @@ export const MainMapLibre = () => {
   return (
     <>
       <div ref={mapRef} style={{ height: "100vh" }}></div>
-      <button
-        className="calc-distance"
-        disabled={disabledCalcDistance}
-        onClick={() => {
-          if (position?.destination === undefined) return;
-          if (position?.myPosition === undefined) return;
+      <div className="buttons">
+        <button
+          className="calc-distance"
+          disabled={disabledCalcDistance}
+          onClick={() => {
+            if (position?.destination === undefined) return;
+            if (position?.myPosition === undefined) return;
 
-          linestring.geometry.coordinates = [
-            position.destination.longitude,
-            position.destination.latitude,
-            position.myPosition.longitude,
-            position.myPosition.latitude,
-          ];
-
-          const result = distance(
-            point([
+            linestring.geometry.coordinates = [
               position.destination.longitude,
               position.destination.latitude,
-            ]),
-            point([
               position.myPosition.longitude,
               position.myPosition.latitude,
-            ]),
-            { units: "kilometers" }
-          ).toFixed(2);
-          setResult(`距離: ${result}km`);
-        }}
-        title={
-          disabledCalcDistance
-            ? "目的地と現在地を選択してください"
-            : "距離を計測できます"
-        }
-      >
-        計測
-      </button>
+            ];
+
+            const result = distance(
+              point([
+                position.destination.longitude,
+                position.destination.latitude,
+              ]),
+              point([
+                position.myPosition.longitude,
+                position.myPosition.latitude,
+              ]),
+              { units: "kilometers" }
+            ).toFixed(2);
+            setResult(`距離: ${result}km`);
+          }}
+          title={
+            disabledCalcDistance
+              ? "目的地と現在地を選択してください"
+              : "距離を計測できます"
+          }
+        >
+          計測
+        </button>
+        {/* <button
+          className="reset"
+          onClick={() => {
+            setPosition(undefined);
+            setResult(undefined);
+            // console.log('#', map)
+            // console.log("#1", map.getLayersOrder());
+            // console.log("#2", map.getLayer("my-position-layer"));
+            // console.log("#", map);
+            // map.removeLayer("my-position-layer");
+          }}
+          title="全ての位置情報をリセットします"
+        >
+          リセット
+        </button> */}
+      </div>
+
       <div className="description">
         <div className="title">使い方</div>
         <ol>

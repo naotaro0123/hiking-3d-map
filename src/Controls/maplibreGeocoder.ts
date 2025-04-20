@@ -60,6 +60,7 @@ export const getMapLibreGeocoder = (
     placeholder: "目的地を入力",
     flyTo: false, // 決定時に地図を移動させない
   });
+  let popup: maplibregl.Popup | null = null;
 
   geocoder.on("result", (e) => {
     const result = e.result as CarmenGeojsonFeature;
@@ -79,7 +80,10 @@ export const getMapLibreGeocoder = (
       },
     }));
 
-    new maplibregl.Popup({ closeOnClick: false })
+    if (popup) {
+      popup.remove();
+    }
+    popup = new maplibregl.Popup({ closeOnClick: false })
       .setLngLat(coords)
       .setHTML(
         `<div>
