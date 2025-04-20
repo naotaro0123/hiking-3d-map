@@ -79,7 +79,7 @@ export const getMapLibreGeocoder = (
       },
     }));
 
-    new maplibregl.Popup()
+    new maplibregl.Popup({ closeOnClick: false })
       .setLngLat(coords)
       .setHTML(
         `<div>

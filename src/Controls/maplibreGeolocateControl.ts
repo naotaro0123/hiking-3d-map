@@ -24,7 +24,7 @@ export const getMaplibreGeolocateControl = (
       },
     }));
 
-    new maplibregl.Popup()
+    new maplibregl.Popup({ closeOnClick: false })
       .setLngLat([coords.longitude, coords.latitude])
       .setHTML(
         `<div>

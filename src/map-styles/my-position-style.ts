@@ -46,7 +46,7 @@ export const addMyPositionStyle = (
       },
     }));
 
-    new maplibregl.Popup()
+    new maplibregl.Popup({ closeOnClick: false })
       .setLngLat([longitude, latitude])
       .setHTML(
         `<div>
