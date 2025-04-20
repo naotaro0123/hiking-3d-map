@@ -1,3 +1,4 @@
+import { distance, point } from "@turf/turf";
 import maplibregl, {
   GeoJSONSourceSpecification,
   StyleSpecification,
@@ -5,7 +6,6 @@ import maplibregl, {
 import "maplibre-gl/dist/maplibre-gl.css";
 import * as pmtiles from "pmtiles";
 import { useEffect, useRef, useState } from "react";
-import { calcDistanceControls } from "../Controls/calcDistanceControl";
 import { initViewSetting } from "../Controls/controls-common";
 import { addAwsShadeStyle } from "../map-styles/aws-shade-style";
 import { addHillShadeStyle } from "../map-styles/hill-shade-style";
@@ -56,6 +56,15 @@ const geojson: GeoJSONSourceSpecification["data"] = {
   type: "FeatureCollection",
   features: [],
 };
+
+// 座標間の線を描画するために使用
+const linestring = {
+  type: "Feature",
+  geometry: {
+    type: "LineString",
+    coordinates: [] as number[],
+  },
+};
 export const MainMapLibre = () => {
   const protocol = new pmtiles.Protocol();
   maplibregl.addProtocol("pmtiles", protocol.tile);
@@ -83,8 +92,6 @@ export const MainMapLibre = () => {
       addAwsShadeStyle(map);
       addHillShadeStyle(map);
       setUiStyle(map, setPosition);
-      calcDistanceControls(position, setResult);
-
       if (isDebug) {
         // ダブルクリックした位置にマーカーを表示する（デバッグ用）
         addMyPositionStyle(map, setPosition);
@@ -116,9 +123,47 @@ export const MainMapLibre = () => {
     };
   }, []);
 
+  const disabledCalcDistance =
+    position?.destination === undefined || position?.myPosition === undefined;
+
   return (
     <>
       <div ref={mapRef} style={{ height: "100vh" }}></div>
+      <button
+        className="calc-distance"
+        disabled={disabledCalcDistance}
+        onClick={() => {
+          if (position?.destination === undefined) return;
+          if (position?.myPosition === undefined) return;
+
+          linestring.geometry.coordinates = [
+            position.destination.longitude,
+            position.destination.latitude,
+            position.myPosition.longitude,
+            position.myPosition.latitude,
+          ];
+
+          const result = distance(
+            point([
+              position.destination.longitude,
+              position.destination.latitude,
+            ]),
+            point([
+              position.myPosition.longitude,
+              position.myPosition.latitude,
+            ]),
+            { units: "kilometers" }
+          ).toFixed(2);
+          setResult(`距離: ${result}km`);
+        }}
+        title={
+          disabledCalcDistance
+            ? "目的地と現在地を選択してください"
+            : "距離を計測できます"
+        }
+      >
+        計測
+      </button>
       <div className="description">
         <div className="title">使い方</div>
         <ol>
