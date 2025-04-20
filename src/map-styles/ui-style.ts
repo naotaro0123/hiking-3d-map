@@ -11,16 +11,13 @@ export const setUiStyle = (
 ) => {
   // 目的地入力のジオコーダーを追加
   map.addControl(getMapLibreGeocoder(map, setPosition), "top-left");
+  // ユーザーの現在地を取得するコントロールを追加
+  map.addControl(getMaplibreGeolocateControl(map, setPosition), "top-left");
 
   // 視点リセットボタンを追加
   map.addControl(new ResetViewControl(), "top-right");
-
   // 2D視点ボタン/3D視点ボタンを追加
   map.addControl(new ChangeViewControl(), "top-right");
-
   // コントロール関係表示
   map.addControl(new maplibregl.NavigationControl());
-
-  // ユーザーの現在地を取得するコントロールを追加
-  map.addControl(getMaplibreGeolocateControl(map, setPosition));
 };
