@@ -165,7 +165,7 @@ export const MainMapLibre = () => {
         >
           計測
         </button>
-        {/* <button
+        <button
           className="reset"
           onClick={() => {
             setPosition(undefined);
@@ -179,7 +179,7 @@ export const MainMapLibre = () => {
           title="全ての位置情報をリセットします"
         >
           リセット
-        </button> */}
+        </button>
       </div>
 
       <div className="description">
