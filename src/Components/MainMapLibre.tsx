@@ -75,33 +75,35 @@ export const MainMapLibre = () => {
   );
   // 距離計測結果
   const [result, setResult] = useState<string | undefined>(undefined);
+  const map = useRef<maplibregl.Map>(null);
 
   useEffect(() => {
     const container = mapRef.current;
     if (container === null) return;
 
-    const map = new maplibregl.Map({
+    map.current = new maplibregl.Map({
       container,
       ...initViewSetting,
       attributionControl: false, // 地図の著作権表示を非表示にする
     });
-    map.setStyle(isVectorTile ? vectorTileStyle : rasterTileStyle);
+    map.current.setStyle(isVectorTile ? vectorTileStyle : rasterTileStyle);
 
-    map.on("load", () => {
-      setMapSkyStyle(map);
-      addAwsShadeStyle(map);
-      addHillShadeStyle(map);
-      setUiStyle(map, setPosition);
+    map.current.on("load", () => {
+      if (map.current === null) return;
+      setMapSkyStyle(map.current);
+      addAwsShadeStyle(map.current);
+      addHillShadeStyle(map.current);
+      setUiStyle(map.current, setPosition);
       if (isDebug) {
         // ダブルクリックした位置にマーカーを表示する（デバッグ用）
-        addMyPositionStyle(map, setPosition);
+        addMyPositionStyle(map.current, setPosition);
       }
-      map.addSource("geojson", {
+      map.current.addSource("geojson", {
         type: "geojson",
         data: geojson,
       });
       // 地図上で線を描画するためのレイヤー
-      map.addLayer({
+      map.current.addLayer({
         id: "measure-lines",
         type: "line",
         source: "geojson",
@@ -119,7 +121,7 @@ export const MainMapLibre = () => {
 
     // cleanup for StrictMode
     return () => {
-      map.remove();
+      map.current?.remove();
     };
   }, []);
 
@@ -167,14 +169,24 @@ export const MainMapLibre = () => {
         </button>
         <button
           className="reset"
-          onClick={() => {
+          onClick={async () => {
+            if (map.current === null) return;
             setPosition(undefined);
             setResult(undefined);
-            // console.log('#', map)
-            // console.log("#1", map.getLayersOrder());
-            // console.log("#2", map.getLayer("my-position-layer"));
-            // console.log("#", map);
-            // map.removeLayer("my-position-layer");
+
+            // TODO: mapは取得できるようになったがクリアが実装できてない
+            console.log("#1", map.current.getLayersOrder());
+            console.log("#2", map.current.getLayer("my-position-layer"));
+            const layer = map.current.getLayer("my-position-layer");
+            console.log("#", layer);
+            const source = map.current.getSource(
+              "my-position"
+            ) as maplibregl.GeoJSONSource;
+            console.log("#3", source);
+            // source.setData("");
+            const data = await source.getData();
+            console.log("data", data);
+            // map.current.removeLayer("my-position-layer");
           }}
           title="全ての位置情報をリセットします"
         >
