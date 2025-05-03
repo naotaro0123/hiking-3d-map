@@ -183,7 +183,6 @@ export const MainMapLibre = () => {
               "my-position"
             ) as maplibregl.GeoJSONSource;
             console.log("#3", source);
-            // source.setData("");
             const data = await source.getData();
             console.log("data", data);
             // map.current.removeLayer("my-position-layer");
