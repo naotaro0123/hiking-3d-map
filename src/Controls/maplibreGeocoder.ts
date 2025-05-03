@@ -96,5 +96,16 @@ export const getMapLibreGeocoder = (
       .addTo(map);
   });
 
+  const resetButton = document.querySelector("button.reset");
+  if (resetButton) {
+    resetButton.addEventListener("click", () => {
+      if (popup) {
+        popup.remove();
+        popup = null;
+      }
+      geocoder.clear();
+    });
+  }
+
   return geocoder;
 };
