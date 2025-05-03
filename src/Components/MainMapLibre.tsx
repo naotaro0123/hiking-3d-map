@@ -173,19 +173,6 @@ export const MainMapLibre = () => {
             if (map.current === null) return;
             setPosition(undefined);
             setResult(undefined);
-
-            // TODO: mapは取得できるようになったがクリアが実装できてない
-            console.log("#1", map.current.getLayersOrder());
-            console.log("#2", map.current.getLayer("my-position-layer"));
-            const layer = map.current.getLayer("my-position-layer");
-            console.log("#", layer);
-            const source = map.current.getSource(
-              "my-position"
-            ) as maplibregl.GeoJSONSource;
-            console.log("#3", source);
-            const data = await source.getData();
-            console.log("data", data);
-            // map.current.removeLayer("my-position-layer");
           }}
           title="全ての位置情報をリセットします"
         >

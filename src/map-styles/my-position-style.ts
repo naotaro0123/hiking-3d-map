@@ -32,7 +32,9 @@ export const addMyPositionStyle = (
       "circle-radius": 10,
     },
   });
+
   let popup: maplibregl.Popup | null = null;
+  let source: maplibregl.GeoJSONSource | null = null;
 
   map.on("dblclick", async (e) => {
     const { lat: latitude, lng: longitude } = e.lngLat;
@@ -62,10 +64,31 @@ export const addMyPositionStyle = (
       )
       .addTo(map);
 
-    const source = map.getSource(
-      myPositionSourceName
-    ) as maplibregl.GeoJSONSource;
+    source = map.getSource(myPositionSourceName) as maplibregl.GeoJSONSource;
     data.geometry.coordinates = [longitude, latitude];
     source.setData(data);
   });
+
+  const resetButton = document.querySelector("button.reset");
+  if (resetButton) {
+    resetButton.addEventListener("click", () => {
+      if (popup) {
+        popup.remove();
+        popup = null;
+      }
+      if (source) {
+        source.setData({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [] as number[],
+          },
+          properties: {
+            name: myPositionSourceName,
+            description: "自身の位置点",
+          },
+        });
+      }
+    });
+  }
 };
