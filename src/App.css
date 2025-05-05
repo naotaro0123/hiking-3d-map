@@ -16,13 +16,6 @@ body {
   border: 2px solid white;
   user-select: none;
 }
-.buttons {
-  display: flex;
-  gap: 8px;
-  position: absolute;
-  top: 96px;
-  left: 10px;
-}
 .calc-distance,
 .reset {
   display: flex;
@@ -66,4 +59,22 @@ ol {
   display: flex;
   gap: 4px;
   color: #00ff00;
+}
+
+#root {
+  container-type: inline-size;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  position: absolute;
+  top: 96px;
+  left: 10px;
+}
+
+@container (max-width: 600px) {
+  .buttons {
+    top: 108px;
+  }
 }
