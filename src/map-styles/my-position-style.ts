@@ -2,22 +2,23 @@ import maplibregl from "maplibre-gl";
 import { PositionState } from "../types/position-state";
 
 const myPositionSourceName = "my-position";
+const initData = {
+  type: "Feature" as const,
+  geometry: {
+    type: "Point" as const,
+    coordinates: [] as number[],
+  },
+  properties: {
+    name: myPositionSourceName,
+    description: "自身の位置点",
+  },
+};
 
 export const addMyPositionStyle = (
   map: maplibregl.Map,
   setPosition: React.Dispatch<React.SetStateAction<PositionState | undefined>>
 ) => {
-  const data = {
-    type: "Feature" as const,
-    geometry: {
-      type: "Point" as const,
-      coordinates: [] as number[],
-    },
-    properties: {
-      name: myPositionSourceName,
-      description: "自身の位置点",
-    },
-  };
+  const data = structuredClone(initData);
   map.addSource(myPositionSourceName, {
     type: "geojson",
     data,
@@ -77,17 +78,7 @@ export const addMyPositionStyle = (
         popup = null;
       }
       if (source) {
-        source.setData({
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [] as number[],
-          },
-          properties: {
-            name: myPositionSourceName,
-            description: "自身の位置点",
-          },
-        });
+        source.setData(initData);
       }
     });
   }
