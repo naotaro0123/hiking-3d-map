@@ -1,6 +1,6 @@
 import maplibregl from "maplibre-gl";
 import { ChangeViewControl } from "../Controls/changeViewControl";
-import { getMapLibreGeocoder } from "../Controls/maplibreGeocoder";
+import { DestinationControl } from "../Controls/destinationControl";
 import { getMaplibreGeolocateControl } from "../Controls/maplibreGeolocateControl";
 import { ResetViewControl } from "../Controls/resetViewControl";
 import { PositionState } from "../types/position-state";
@@ -10,7 +10,11 @@ export const setUiStyle = (
   setPosition: React.Dispatch<React.SetStateAction<PositionState | undefined>>
 ) => {
   // 目的地入力のジオコーダーを追加
-  map.addControl(getMapLibreGeocoder(map, setPosition), "top-left");
+  // map.addControl(getMapLibreGeocoder(map, setPosition), "top-left");
+
+  // 目的地入力のコントロールを追加
+  map.addControl(new DestinationControl(), "top-left");
+
   // ユーザーの現在地を取得するコントロールを追加
   map.addControl(getMaplibreGeolocateControl(map, setPosition), "top-left");
 

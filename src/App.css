@@ -65,11 +65,46 @@ ol {
   container-type: inline-size;
 }
 
+.destination-control {
+  background-color: rgba(0, 0, 0, 0) !important;
+  display: flex;
+  gap: 4px;
+  position: relative;
+}
+.destination-input {
+  width: 240px;
+  height: 30px;
+  border: 0;
+  padding-left: 4px;
+}
+.destination-clear-button {
+  background-color: white !important;
+  border-radius: 4px;
+  transition: opacity 0.3s;
+  position: absolute;
+  top: 2px;
+  left: 214px;
+  &.hidden {
+    display: none !important;
+  }
+}
+.destination-search-button {
+  background-color: white !important;
+  border-radius: 4px;
+  height: 32px !important;
+  width: 32px !important;
+  transition: opacity 0.3s;
+  &:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+}
+
 .buttons {
   display: flex;
   gap: 8px;
   position: absolute;
-  top: 96px;
+  top: 200px;
   left: 10px;
 }
 

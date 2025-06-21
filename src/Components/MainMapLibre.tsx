@@ -131,6 +131,11 @@ export const MainMapLibre = () => {
   return (
     <>
       <div ref={mapRef} style={{ height: "100vh" }}></div>
+      {/* <input
+        type="text"
+        className="destination"
+        placeholder="目的地の山名を入力してください"
+      /> */}
       <div className="buttons">
         <button
           className="calc-distance"
