@@ -1,6 +1,34 @@
 import { mdiClose, mdiMapSearch } from "@mdi/js";
 import { getSvgIcon } from "./controls-common";
 
+type MountainRoadRelation = {
+  id: number;
+  type: "relation";
+  name: string;
+  local_name: string;
+  group: string;
+  linear: "yes" | "no";
+  itinerary?: string[];
+  symbol_id: string;
+};
+type MountainRoadResponse = {
+  query: string;
+  page: number;
+  results: MountainRoadRelation[];
+};
+const searchMountainRoads = async (mountainName: string) => {
+  const url = `https://hiking.waymarkedtrails.org/api/v1/list/search?query=${mountainName}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch mountain data: ${response.statusText}`);
+  }
+  const data = (await response.json()) as MountainRoadResponse;
+  if (data.page === 0) {
+    throw new Error("No mountain found with the given name.");
+  }
+  return data.results;
+};
+
 export class DestinationControl implements maplibregl.IControl {
   onAdd(_map: maplibregl.Map): HTMLDivElement {
     const container = document.createElement("div");
@@ -38,6 +66,14 @@ export class DestinationControl implements maplibregl.IControl {
     searchButton.className = "destination-search-button disabled";
     searchButton.innerHTML = getSvgIcon("検索", mdiMapSearch);
     searchButton.addEventListener("contextmenu", (e) => e.preventDefault());
+    searchButton.addEventListener("click", async () => {
+      const mountainName = input.value.trim();
+      if (mountainName.length === 0) return;
+
+      const results = await searchMountainRoads(mountainName);
+      console.log("検索結果:", results);
+      // TODO: 検索処理を実装する
+    });
     container.appendChild(searchButton);
 
     return container;
