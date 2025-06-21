@@ -14,8 +14,12 @@ export class DestinationControl implements maplibregl.IControl {
     input.addEventListener("contextmenu", (e) => e.preventDefault());
     input.addEventListener("input", (e) => {
       const target = e.target as HTMLInputElement;
+
       const clearButton = document.querySelector(".destination-clear-button");
       clearButton?.classList.toggle("hidden", target.value.length === 0);
+
+      const searchButton = document.querySelector(".destination-search-button");
+      searchButton?.classList.toggle("disabled", target.value.length === 0);
     });
     container.appendChild(input);
 
@@ -31,7 +35,7 @@ export class DestinationControl implements maplibregl.IControl {
 
     // 検索ボタン
     const searchButton = document.createElement("button");
-    searchButton.className = "destination-search-button";
+    searchButton.className = "destination-search-button disabled";
     searchButton.innerHTML = getSvgIcon("検索", mdiMapSearch);
     searchButton.addEventListener("contextmenu", (e) => e.preventDefault());
     container.appendChild(searchButton);
