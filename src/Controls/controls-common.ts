@@ -1,8 +1,5 @@
 export const getSvgIcon = (title: string, path: string) =>
-  `<svg viewBox="0 0 24 24"><title>${title}</title><path d="${path}"></path></svg>`;
-
-export const getButtonWithSvgIcon = (title: string, path: string) =>
-  `<button>${getSvgIcon(title, path)}</button>`;
+  `<button><svg viewBox="0 0 24 24"><title>${title}</title><path d="${path}"></path></svg></button>`;
 
 export type InitViewSetting = {
   center: [number, number];
