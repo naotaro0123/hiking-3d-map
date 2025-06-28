@@ -125,12 +125,14 @@ export class DestinationControl implements maplibregl.IControl {
     container.className =
       "maplibregl-ctrl maplibregl-ctrl-group destination-control";
 
-    const input = document.createElement("input");
-    input.type = "text";
-    input.placeholder = "目的地の山名を入力してください";
-    input.className = "destination-input";
-    input.addEventListener("contextmenu", (e) => e.preventDefault());
-    input.addEventListener("input", (e) => {
+    const inputMountainName = document.createElement("input");
+    inputMountainName.type = "text";
+    inputMountainName.placeholder = "目的地の山名を入力してください";
+    inputMountainName.className = "destination-input";
+    inputMountainName.addEventListener("contextmenu", (e) =>
+      e.preventDefault()
+    );
+    inputMountainName.addEventListener("input", (e) => {
       const target = e.target as HTMLInputElement;
 
       const clearButton = document.querySelector(".destination-clear-button");
@@ -139,7 +141,7 @@ export class DestinationControl implements maplibregl.IControl {
       const searchButton = document.querySelector(".destination-search-button");
       searchButton?.classList.toggle("disabled", target.value.length === 0);
     });
-    container.appendChild(input);
+    container.appendChild(inputMountainName);
 
     // クリアボタン
     const clearButton = document.createElement("button");
@@ -147,7 +149,7 @@ export class DestinationControl implements maplibregl.IControl {
     clearButton.innerHTML = getSvgIcon("クリア", mdiClose);
     clearButton.addEventListener("contextmenu", (e) => e.preventDefault());
     clearButton.addEventListener("click", () => {
-      input.value = "";
+      inputMountainName.value = "";
     });
     container.appendChild(clearButton);
 
@@ -157,7 +159,7 @@ export class DestinationControl implements maplibregl.IControl {
     searchButton.innerHTML = getSvgIcon("検索", mdiMapSearch);
     searchButton.addEventListener("contextmenu", (e) => e.preventDefault());
     searchButton.addEventListener("click", async () => {
-      const mountainName = input.value.trim();
+      const mountainName = inputMountainName.value.trim();
       if (mountainName.length === 0) return;
 
       const results = await searchMountainRoads(mountainName);
@@ -165,7 +167,7 @@ export class DestinationControl implements maplibregl.IControl {
       // TODO: 検索処理を実装する
     });
     // Enterキーで検索
-    input.addEventListener("keydown", (e) => {
+    inputMountainName.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !searchButton.classList.contains("disabled")) {
         e.preventDefault();
         searchButton.click();
@@ -190,7 +192,7 @@ export class DestinationControl implements maplibregl.IControl {
       e.preventDefault()
     );
     clearButtonInResults.addEventListener("click", () => {
-      // TODO: 検索結果をクリアする処理を実装する
+      inputMountainName.value = "";
     });
     resultContainer.appendChild(clearButtonInResults);
 
