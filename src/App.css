@@ -94,10 +94,7 @@ ol {
   height: 32px !important;
   width: 32px !important;
   transition: opacity 0.3s;
-  &.disabled {
-    cursor: not-allowed;
-  }
-  &:hover:not(.disabled) {
+  &:hover {
     cursor: pointer;
     opacity: 0.8;
   }
